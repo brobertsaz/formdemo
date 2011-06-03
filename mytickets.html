@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />	
+	<title>Current Trouble Tickets for C2RouteApp</title>	
+	<!-- HTML5 Shim, IE8 and bellow recognize HTML5 elements -->
+	<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->		
+	<!-- Modernizr -->
+	<script src="js/modernizr-1.5.min.js"></script>
+	<!-- Webforms2 -->
+	<script src="webforms2/webforms2-p.js"></script>	
+	<!-- jQuery and jQuery UI -->
+	<link rel="stylesheet" href="ui-themes/aristo/jquery.ui.all.css"> 
+	<script src="js/jquery-1.4.3.min.js"></script>
+	<script src="js/jquery-ui-1.8.5.min.js"></script>
+	<!-- jQuery Placehol -->
+	<script src="components/placeholder/jquery.placehold-0.2.min.js"></script>
+	<!-- Demo page layout -->
+	<link rel="stylesheet" href="css/html5forms.layout.css">
+	<script src="js/html5forms.js"></script>
+	<script src="js/html5forms.fallback.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/flexigrid/flexigrid.css">
+    <script type="text/javascript" src="flexigrid.js"></script>	
+
+<style>
+	.flexigrid div.fbutton .add
+		{
+			background: url(css/images/add.png) no-repeat center left;
+		}	
+
+	.flexigrid div.fbutton .delete
+		{
+			background: url(css/images/close.png) no-repeat center left;
+		}	
+
+</style>			
+</head>
+<body>
+	
+	<h1>
+		Support Ticket System
+		<span>for <a href="http://c2routeapp.com">C2RouteApp</a>, from <a href="http://c2logix.com/">C2Logix.</a></span>
+	</h1>
+	
+	<form>		
+		<p><label for="category">Support Categories</label>
+		<select id="category" required>
+			<option value="1">Select type of issue....</option>
+			<option value="2">Data related</option>
+			<option value="3">Reports</option>
+			<option value="4">Mapping</option>
+			<option value="5">Routing</option>
+			<option value="6">Parameters</option>
+		</select></p>
+	
+	<p><label for="email-field">Email: </label>
+		<input type="email" id="email-field" name="email-field" required></p>
+
+	<p><label for="text-field">Username</label>
+		<input type="text" name="text-field" id="text-field" required></p>
+	
+	<p><label for="newissue">Issue</label>
+		<textarea id="newissue" placeholder="Describe your issue...."></textarea></p>
+	
+
+
+<br />		
+
+		<div class="clearfix"></div>
+	</form>
+	
+<table id="flex1" style="display:none"></table>
+
+<script type="text/javascript">
+
+			$("#flex1").flexigrid
+			(
+			{
+			url: 'post3.php',
+			dataType: 'json',
+			colModel : [
+				{display: 'ISO', name : 'iso', width : 40, sortable : true, align: 'center'},
+				{display: 'Name', name : 'name', width : 180, sortable : true, align: 'left'},
+				{display: 'Printable Name', name : 'printable_name', width : 120, sortable : true, align: 'left'},
+				{display: 'ISO3', name : 'iso3', width : 130, sortable : true, align: 'left', hide: true},
+				{display: 'Number Code', name : 'numcode', width : 80, sortable : true, align: 'right'}
+				],
+			searchitems : [
+				{display: 'ISO', name : 'iso'},
+				{display: 'Name', name : 'name', isdefault: true}
+				],
+			sortname: "iso",
+			sortorder: "asc",
+			usepager: true,
+			title: 'Countries',
+			useRp: true,
+			rp: 15,
+			showTableToggleBtn: true,
+			width: 700,
+			onSubmit: addFormData,
+			height: 200
+			}
+			);
+
+
+
+
+//This function adds paramaters to the post of flexigrid. You can add a verification as well by return to false if you don't want flexigrid to submit			
+function addFormData()
+	{
+	
+	//passing a form object to serializeArray will get the valid data from all the objects, but, if the you pass a non-form object, you have to specify the input elements that the data will come from
+	var dt = $('#sform').serializeArray();
+	$("#flex1").flexOptions({params: dt});
+	return true;
+	}
+	
+$('#sform').submit
+(
+	function ()
+		{
+			$('#flex1').flexOptions({newp: 1}).flexReload();
+			return false;
+		}
+);						
+
+
+	
+	<footer>
+			<p class="author">
+			C2RouteApp Support <a href="mailto:support@c2logix.com">Email Support</a>
+		</p>
+	</footer>
+	
+</body>
+</html>

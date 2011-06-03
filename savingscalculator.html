@@ -1,0 +1,136 @@
+<html>
+
+<head>
+    <title>Savings Calculator</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+	
+<style type="text/css">
+
+label { width: 17em; float: left; }
+label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+
+</style>
+
+</head>
+
+<body>
+
+<form id="roi-form">
+<fieldset>
+<legend>Please fill in the fields with the "*" and then click the button for the calculation.</legend>
+<p>
+  <label for="trucks">Number of Vehicles:</label>
+  <em>*</em><input name="trucks" id="trucks" size="20" class="required" />
+</p>
+
+<p>
+  <label for="salary">Hourly Driver Salary:</label>
+  <em>*</em><input name="salary" id="salary" size="20" class="required" />
+</p>
+
+<p>
+  <label for="cpm">Cost per Mile:</label>
+  <em>*</em><input name="cpm" id="cpm" size="20" class="required" />
+</p>
+
+<p> 
+  <label for="currmiles">Total Miles Driven per Vehicle:</label> 
+  <em>*</em><input name="currmiles" id="currmiles" size="20" class="required" />
+</p>
+
+<p>
+  <label for="list">Estimated Mileage Reduction:</label>
+  <em>*</em><select id="list" class="required">
+<option value='0'>Select the Savings.....</option>
+<option value='10'>10 %</option>
+<option value='15'>15 %</option>
+<option value='20'>20 %</option>
+<option value='25'>25 %</option>
+
+</select> 
+</p>
+
+<input type="submit" id="roi-calc" value="Calculate Savings">
+
+<br />
+
+<h3>Daily Savings</h3>
+
+<p>
+  <label for="dailywagesper">Hourly Wages Saved per Vehicle:</label>   
+  $<input type="text" name="dailywagesper" id="dailywagesper" size="20" class="roiAnswer" />
+</p>
+<p>
+  <label for="vehcostsper">Operating Costs Saved per Vehicle:</label>    
+  $<input type="text" name="vehcostsper" id="vehcostsper" size="20" class="roiAnswer" />
+</p>
+<p>
+  <label for="dailywages">Hourly Wages Saved per Day:</label>   
+  $<input type="text" name="dailywages" id="dailywages" size="20" class="roiAnswer" />
+</p>
+<p>
+  <label for="vehcosts">Operating Costs Saved per Day:</label>    
+  $<input type="text" name="vehcosts" id="vehcosts" size="20" class="roiAnswer" />
+</p>
+
+<h3>Long Term Savings</h3>
+
+<p> 
+  <label for="monthlysavings">Total Monthly Savings:</label>   
+  $<input type="text" name="monthlysavings" id="monthlysavings" size="20" class="roiAnswer" />
+</p>
+<p>
+  <label for="annualsavings">Total Annual Savings:</label>   
+  $<input type="text" name="annualsavings" id="annualsavings" size="20" class="roiAnswer" />
+</p>
+
+</fieldset>
+<br /><h6>Assumptions:</h6> 
+<ul>
+<li><font size ="1">Mileage savings based on average of 40 mph.</font></li>
+<li><font size ="1">Monthly savings based on 20 work days per month.</font></li> 
+</ul>
+</form>
+
+
+<script type="text/javascript">
+    jQuery.noConflict();
+	
+jQuery(function() {
+    jQuery("#roi-form").validate();
+
+    jQuery("#roi-form").submit(function(e) {
+        e.preventDefault();
+
+        var trucks = parseInt(jQuery("#trucks").val());
+        var salary = parseFloat(jQuery("#salary").val());
+        var cpm = parseFloat(jQuery("#cpm").val());
+        var miles = parseInt(jQuery("#currmiles").val());
+        var reduction = parseInt(jQuery("#list").val())/100;
+
+        var milessavings = trucks * (miles * reduction);
+	    var hourssavings = 1/(40 / milessavings);
+        var dailysavingsper = (salary * hourssavings) / trucks;
+        var vehiclesavingsper = (cpm * milessavings) / trucks;		
+        var dailysavings = salary * hourssavings;
+        var vehiclesavings = cpm * milessavings;
+        var ttlmonthlysavings = 20 * (dailysavings + vehiclesavings);
+        var ttlannualsavings = 12 * ttlmonthlysavings;
+
+        if(!isNaN(milessavings)) {
+            jQuery("#dailywagesper").val(dailysavingsper.toFixed(2));
+            jQuery("#vehcostsper").val(vehiclesavingsper.toFixed(2));
+            jQuery("#dailywages").val(dailysavings.toFixed(2));
+            jQuery("#vehcosts").val(vehiclesavings.toFixed(2));
+            jQuery("#monthlysavings").val(ttlmonthlysavings.toFixed(2));
+            jQuery("#annualsavings").val(ttlannualsavings.toFixed(2));
+        } else {
+            jQuery("#milessaved").val('There was an error');
+        }
+    });
+});
+</script>
+
+</body>
+</html>
